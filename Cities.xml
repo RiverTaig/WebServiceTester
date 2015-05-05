@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- XML declaration, there can only be one XML declaration in an XML document -->
+
+<WorldCities>
+  <!-- Root node, there can only be one root node in an XML document -->
+
+  <City>
+    <!-- Parent node -->
+    <Name>Vancouver</Name>
+    <!-- Child node -->
+    <Country>Canada</Country>
+    <!-- Sibling node of location -->
+    <Continent>North America</Continent>
+    <!-- Sibling node of location -->
+  </City>
+
+  <City>
+    <Name>Buenos Aires</Name>
+    <Country>Argentina</Country>
+    <Continent>South America</Continent>
+  </City>
+
+  <City>
+    <Name>Berlin</Name>
+    <Country>Germany</Country>
+    <Continent>Europe</Continent>
+  </City>
+
+  <City>
+    <Name>Nairobi</Name>
+    <Country>Kenya</Country>
+    <Continent>Africa</Continent>
+  </City>
+
+  <City>
+    <Name>Tokyo</Name>
+    <Country>Japan</Country>
+    <Continent>Asia</Continent>
+  </City>
+
+  <City>
+    <Name>Sydney</Name>
+    <Country>Australia</Country>
+    <Continent>Australia</Continent>
+  </City>
+
+
+</WorldCities>

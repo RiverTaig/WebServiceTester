@@ -1,0 +1,7 @@
+C:\Code\Git\WebServiceTester\bin\Debug\WebServiceTester.exe
+C:\Code\Git\WebServiceTester\bin\Debug\WebServiceTester.pdb
+C:\Code\Git\WebServiceTester\obj\Debug\WebServiceTester.csprojResolveAssemblyReference.cache
+C:\Code\Git\WebServiceTester\obj\Debug\WebServiceTester.exe
+C:\Code\Git\WebServiceTester\obj\Debug\WebServiceTester.pdb
+C:\Code\Git\WebServiceTester\bin\Debug\Settings.xml
+C:\Code\Git\WebServiceTester\bin\Debug\Cities.xml

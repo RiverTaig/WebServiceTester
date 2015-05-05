@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServiceTester", "WebServiceTester.csproj", "{1B8A056C-08AF-43AB-9E35-67BB4AAC63A0}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebServiceTesterAdministrator", "WebServiceTesterAdministrator\", "{E0D55A25-929F-4B29-8D4C-84199ED8902E}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv3.5"
+		Debug.AspNetCompiler.VirtualPath = "/WebServiceTesterAdministrator"
+		Debug.AspNetCompiler.PhysicalPath = "WebServiceTesterAdministrator\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\WebServiceTesterAdministrator\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/WebServiceTesterAdministrator"
+		Release.AspNetCompiler.PhysicalPath = "WebServiceTesterAdministrator\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\WebServiceTesterAdministrator\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "51937"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B8A056C-08AF-43AB-9E35-67BB4AAC63A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B8A056C-08AF-43AB-9E35-67BB4AAC63A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B8A056C-08AF-43AB-9E35-67BB4AAC63A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B8A056C-08AF-43AB-9E35-67BB4AAC63A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0D55A25-929F-4B29-8D4C-84199ED8902E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0D55A25-929F-4B29-8D4C-84199ED8902E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0D55A25-929F-4B29-8D4C-84199ED8902E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0D55A25-929F-4B29-8D4C-84199ED8902E}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

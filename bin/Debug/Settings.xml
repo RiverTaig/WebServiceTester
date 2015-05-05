@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebServiceTester>
+  <FREQUENCY>2</FREQUENCY>
+  <URLS>
+    <URL>
+      <NAME>Neils Silverlight Page</NAME>
+      <PATH>http://10.167.25.104/arcfmsilverlight</PATH>
+      <THRESHOLD>2</THRESHOLD>
+      <EMAIL>RIVER.TAIG@GMAIL.COM,RIVER.TAIG@SCHNEIDER-ELECTRIC.COM</EMAIL>
+      <CONSECUTIVEFAILCOUNT>0</CONSECUTIVEFAILCOUNT>
+      <LASTFAILURE></LASTFAILURE>
+      <REASON></REASON>
+    </URL>
+    <URL>
+      <NAME>Three 2</NAME>
+      <PATH>Three 2 url</PATH>
+      <THRESHOLD>33</THRESHOLD>
+      <EMAIL>33gmail</EMAIL>
+      <CONSECUTIVEFAILCOUNT>0</CONSECUTIVEFAILCOUNT>
+      <LASTFAILURE></LASTFAILURE>
+      <REASON></REASON>
+    </URL>
+  </URLS>
+</WebServiceTester>
