@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -74,31 +75,49 @@ public partial class _Default : System.Web.UI.Page
                 }
                 txtEmail.Text = emails;
                 lblFailureReason.Text = reason;
+                if (reason == "")
+                {
+                    lblFailureReason.ForeColor = System.Drawing.Color.ForestGreen;
+                    lblLastFailDateTime.ForeColor = System.Drawing.Color.ForestGreen;
+                    lblFailureReason.Text = "No failures yet!";
+                    lblLastFailDateTime.Text = "No failures yet!";
+                }
+                else
+                {
+                    lblFailureReason.ForeColor = System.Drawing.Color.Red;
+                    lblLastFailDateTime.ForeColor = System.Drawing.Color.Red;
+                    lblLastFailDateTime.Text = lastFailureValue;
+                }
                 txtURL.Text = path;
                 txtThreshold.Text = threshold.ToString();
                 txtName.Text = name;
-                lblLastFailDateTime.Text = lastFailureValue;
+                
             }            
             int start = index + 1;
             lblCurrentIndex.Text = start.ToString();
-            lblMaxIndex.Text = maxIndex.ToString();
+            lblMaxIndex.Text = maxIndex.ToString() + "&nbsp;&nbsp;&nbsp;   ";
+            lblTestResult.Text = "";
             //lblst.Text = "Showing " + start + " of " + maxIndex;
             counter++;
         }
     }
-    protected void btnAdd_Click(object sender, EventArgs e)
+    protected void btnAdd_Click(object sender, ImageClickEventArgs e)
     {
         int currentMax = Convert.ToInt16(lblMaxIndex.Text);
         lblMaxIndex.Text = Convert.ToString(currentMax + 1);
         lblCurrentIndex.Text = lblMaxIndex.Text;
         txtEmail.Text = "";
-        txtFrequency.Text = "2";
+        txtFrequency.Text = "1";
         txtName.Text = "";
         txtURL.Text = "";
+        lblLastFailDateTime.Text = "No failures yet!";
+        lblFailureReason .Text = "No failures yet!";
+        lblFailureReason.ForeColor = System.Drawing.Color.ForestGreen;
+        lblTestResult.ForeColor = System.Drawing.Color.ForestGreen;
         var urls = _xmlDoc.XPathSelectElement("/WebServiceTester/URLS");
         XElement name = new XElement("NAME", "");
         XElement path = new XElement("PATH", "");
-        XElement threshold = new XElement("THRESHOLD", "");
+        XElement threshold = new XElement("THRESHOLD", "2");
         XElement email = new XElement("EMAIL", "");
         XElement failCount = new XElement("CONSECUTIVEFAILCOUNT", "0");
         XElement lastfailure = new XElement("LASTFAILURE", "");
@@ -107,7 +126,7 @@ public partial class _Default : System.Web.UI.Page
         urls.Add(url);
         url.Add(name, path, threshold, email, failCount, lastfailure, reason);
     }
-    protected void btnDelete_Click(object sender, EventArgs e)
+    protected void btnDelete_Click(object sender, ImageClickEventArgs e)
     {
         int currentIndex = Convert.ToInt16(lblCurrentIndex.Text) - 1;
         int currentMax = Convert.ToInt16(lblMaxIndex.Text);
@@ -142,7 +161,8 @@ public partial class _Default : System.Web.UI.Page
     protected void btnNext_Click(object sender, EventArgs e)
     {
         int currentIndex = Convert.ToInt16(lblCurrentIndex.Text)-1;
-        int maxIndex = Convert.ToInt16(lblMaxIndex.Text);
+        int maxIndex = Convert.ToInt16(lblMaxIndex.Text.Substring(0, lblMaxIndex.Text.IndexOf("&")));
+        //int maxIndex = Convert.ToInt16(lblMaxIndex.Text);
         PerformLocalSave(currentIndex);
         currentIndex++;
         if (currentIndex > maxIndex -1)
@@ -167,4 +187,21 @@ public partial class _Default : System.Web.UI.Page
         lblSaved.ForeColor = System.Drawing.Color.Red;
         lblSaved.Text = "Remember to Save!!";
     }
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            WebClient wc = new WebClient();
+            byte[] testReturn = wc.DownloadData(txtURL.Text);
+            lblTestResult.ForeColor = System.Drawing.Color.ForestGreen;
+            lblTestResult.Text = "Success!";
+        }
+        catch
+        {
+            lblTestResult.ForeColor = System.Drawing.Color.Red;
+            lblTestResult.Text = "Failure!";
+        }
+    }
+
 }

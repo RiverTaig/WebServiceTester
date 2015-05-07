@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <WebServiceTester>
-  <FREQUENCY>5000</FREQUENCY>
+  <FREQUENCY>1</FREQUENCY>
   <URLS>
     <URL>
       <NAME>Local Simple HTML</NAME>
@@ -12,13 +12,13 @@
       <REASON>-</REASON>
     </URL>
     <URL>
-      <NAME>Neils Silverlight Page</NAME>
-      <PATH>http://10.167.25.104/arcfmsilverlight</PATH>
+      <NAME>Huffington Post</NAME>
+      <PATH>http://www.huffingtonpost.com</PATH>
       <THRESHOLD>2</THRESHOLD>
-      <EMAIL>RIVER.TAIG@GMAIL.COM,RIVER.TAIG@SCHNEIDER-ELECTRIC.COM</EMAIL>
+      <EMAIL>RIVER.TAIG@GMAIL.COM</EMAIL>
       <CONSECUTIVEFAILCOUNT>0</CONSECUTIVEFAILCOUNT>
       <LASTFAILURE></LASTFAILURE>
       <REASON></REASON>
-    </URL>
+    </URL>    
   </URLS>
 </WebServiceTester>

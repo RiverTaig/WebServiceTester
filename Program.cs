@@ -20,9 +20,9 @@ namespace WebServiceTester
         {
             try
             {
-                string settingsXML = System.Environment.CurrentDirectory + "\\Settings.xml";
+                string settingsXML = System.Environment.CurrentDirectory + "\\Settings_new.xml";
                 var xDoc = XDocument.Load(settingsXML);
-                int interval = Convert.ToInt32(xDoc.Element("WebServiceTester").Element("FREQUENCY").Value);
+                int interval = 1000 * 5 *  Convert.ToInt32(xDoc.Element("WebServiceTester").Element("FREQUENCY").Value);
                 aTimer = new System.Timers.Timer(interval);
                 aTimer.Elapsed += OnTimedEvent;
                 aTimer.Enabled = true;
@@ -49,8 +49,8 @@ namespace WebServiceTester
             try
             {
                 aTimer.Enabled = false;
-                Console.WriteLine("On Time Event iteration: " + iterations);
-                string settingsXML = System.Environment.CurrentDirectory + "\\Settings.xml";
+                Console.WriteLine("Iteration: " + iterations + " : " + DateTime.Now.ToString());
+                string settingsXML = System.Environment.CurrentDirectory + "\\Settings_new.xml";
                 var xDoc = XDocument.Load(settingsXML);
                 string a = "WebServiceTester";
                 var urls = xDoc.XPathSelectElements("/WebServiceTester/URLS/URL");
@@ -61,26 +61,26 @@ namespace WebServiceTester
                     var name = xel.Element("NAME").Value;
                     var threshold = Convert.ToInt16(xel.Element("THRESHOLD").Value);
                     int failCount = Convert.ToInt16(xel.Element("CONSECUTIVEFAILCOUNT").Value);//LASTFAILURE
-                    Console.WriteLine("Fail Count = " + failCount);
-                    DateTime lastFailure = Convert.ToDateTime(xel.Element("LASTFAILURE").Value);
+                    //Console.WriteLine("Fail Count = " + failCount);
+                    //DateTime lastFailure = Convert.ToDateTime(xel.Element("LASTFAILURE").Value);
                     WebClient wc = new WebClient();
                     try
                     {
                         byte[] testReturn = wc.DownloadData(path);
                         if (failCount > 0)
                         {
-                            Console.WriteLine("Back online!");
+                            Console.WriteLine("    " + path +  " is Back online!");
                             xel.Element("CONSECUTIVEFAILCOUNT").Value = "0";
                             xDoc.Save(settingsXML);
                             foreach (string email in emails.Value.Split(','))
                             {
-                                Console.WriteLine("Sending Back online email");
+                                Console.WriteLine("    Sending Back online email");
                                 SendEmail(email, name + " - SUCCESS!!", path + " should be available now");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Normal success - no action taken");
+                            Console.WriteLine("    Success on " + path + " - no action taken");
                         }
                     }
                     catch (Exception ex)
@@ -88,14 +88,15 @@ namespace WebServiceTester
                         string dt = DateTime.Now.ToLongDateString();
                         xel.Element("LASTFAILURE").Value = dt;
                         failCount++;
-                        Console.WriteLine("FAIL on " + path + "  FailCount = " +  failCount);
+                        Console.WriteLine("    FAIL on " + path + "  FailCount = " +  failCount);
                         xel.Element("CONSECUTIVEFAILCOUNT").Value = failCount.ToString();
+                        xel.Element("REASON").Value = ex.ToString();
                         xDoc.Save(settingsXML);
                         if (failCount == threshold)
                         {
                             foreach (string email in emails.Value.Split(','))
                             {
-                                Console.WriteLine("Sending failure email");
+                                Console.WriteLine("    Sending failure email");
                                 SendEmail(email, name + " FAILED!!", 
                                     "URL: " + path 
                                     + Environment.NewLine + "Time: "  + dt 
@@ -126,7 +127,7 @@ namespace WebServiceTester
             };
             var message = new MailMessage("rivertaig@gmail.com", address);
             message.Subject = subject;
-            message.Body = body + Environment.NewLine + "Current time: " + DateTime.Now.ToLongDateString();
+            message.Body = body + Environment.NewLine + Environment.NewLine + "Current time: " + DateTime.Now.ToString();
             mailSMTPClient.Send(message);
             message.Dispose();
         }
