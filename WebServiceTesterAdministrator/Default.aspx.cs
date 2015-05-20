@@ -12,8 +12,7 @@ using System.Xml.XPath;
 
 public partial class _Default : System.Web.UI.Page 
 {
-    //private static int currentIndex = 0;
-    //private static int maxIndex= 0;
+
     private static XDocument _xmlDoc = null;
     string settingsNewXML = @"C:\Code\Git\WebServiceTester\bin\Debug\settings_New.xml";
     string settingsXML = @"C:\Code\Git\WebServiceTester\bin\Debug\settings.xml";
@@ -22,13 +21,17 @@ public partial class _Default : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            int currentIndex = 0;
-            int maxIndex = 0;
+            try
+            {
+                int currentIndex = 0;
+                int maxIndex = 0;
 
-            File.Copy(settingsNewXML, settingsXML, true);
+                File.Copy(settingsNewXML, settingsXML, true);
 
-            _xmlDoc = XDocument.Load(settingsXML);
-            UpdatePageElements(0);
+                _xmlDoc = XDocument.Load(settingsXML);
+                UpdatePageElements(0);
+            }
+            catch { }
 
         }
     }
@@ -51,7 +54,7 @@ public partial class _Default : System.Web.UI.Page
     }
     private void UpdatePageElements(int index)
     {
-
+        //ResetForm();
         var urls = _xmlDoc.XPathSelectElements("/WebServiceTester/URLS/URL");
         int counter = 0;
         int maxIndex = 0;
@@ -103,17 +106,8 @@ public partial class _Default : System.Web.UI.Page
     }
     protected void btnAdd_Click(object sender, ImageClickEventArgs e)
     {
-        int currentMax = Convert.ToInt16(lblMaxIndex.Text);
-        lblMaxIndex.Text = Convert.ToString(currentMax + 1);
-        lblCurrentIndex.Text = lblMaxIndex.Text;
-        txtEmail.Text = "";
-        txtFrequency.Text = "1";
-        txtName.Text = "";
-        txtURL.Text = "";
-        lblLastFailDateTime.Text = "No failures yet!";
-        lblFailureReason .Text = "No failures yet!";
-        lblFailureReason.ForeColor = System.Drawing.Color.ForestGreen;
-        lblTestResult.ForeColor = System.Drawing.Color.ForestGreen;
+        ResetForm();
+        
         var urls = _xmlDoc.XPathSelectElement("/WebServiceTester/URLS");
         XElement name = new XElement("NAME", "");
         XElement path = new XElement("PATH", "");
@@ -126,11 +120,35 @@ public partial class _Default : System.Web.UI.Page
         urls.Add(url);
         url.Add(name, path, threshold, email, failCount, lastfailure, reason);
     }
+
+    private void ResetForm()
+    {
+        int currentMax = 1 + GetIndex(lblMaxIndex);// Convert.ToInt16(lblMaxIndex.Text.Substring(0, lblMaxIndex.Text.IndexOf("&")));
+        lblMaxIndex.Text = Convert.ToString(currentMax + 1) + "&nbsp;&nbsp;&nbsp;   ";
+        lblCurrentIndex.Text = Convert.ToString(currentMax + 1);
+        txtEmail.Text = "";
+        txtFrequency.Text = "1";
+        txtName.Text = "";
+        txtURL.Text = "";
+        lblLastFailDateTime.Text = "No failures yet!";
+        lblFailureReason.Text = "No failures yet!";
+        lblSaved.Text = "Remember to Save";
+        lblFailureReason.ForeColor = System.Drawing.Color.ForestGreen;
+        lblSaved.ForeColor = System.Drawing.Color.Red;
+        lblLastFailDateTime.ForeColor = System.Drawing.Color.ForestGreen;
+    }
     protected void btnDelete_Click(object sender, ImageClickEventArgs e)
     {
-        int currentIndex = Convert.ToInt16(lblCurrentIndex.Text) - 1;
-        int currentMax = Convert.ToInt16(lblMaxIndex.Text);
-        lblMaxIndex.Text = Convert.ToString(currentMax - 1);
+        int currentIndex = GetIndex(lblCurrentIndex); //Convert.ToInt16(lblCurrentIndex.Text) - 1;
+        int currentMax = GetIndex(lblMaxIndex);// Convert.ToInt16(lblMaxIndex.Text.Substring(0, lblMaxIndex.Text.IndexOf("&")));
+        if (currentMax < 0)
+        {
+            ResetForm();
+            lblMaxIndex.Text = "0&nbsp;&nbsp;&nbsp;   ";
+            lblCurrentIndex.Text = "0";
+            return;
+        }
+        lblMaxIndex.Text = Convert.ToString(currentMax ) + "&nbsp;&nbsp;&nbsp;   ";
         lblCurrentIndex.Text = "0";
         var urls = _xmlDoc.XPathSelectElements("/WebServiceTester/URLS/URL");
         int counter = 0;
@@ -143,12 +161,43 @@ public partial class _Default : System.Web.UI.Page
             }
             counter++;
         }
-        xelToDelete.Remove();
-        UpdatePageElements(0);
+        if (xelToDelete != null)
+        {
+            xelToDelete.Remove();
+            if (currentMax == 0)
+            {
+                ResetForm();
+                lblMaxIndex.Text = "0&nbsp;&nbsp;&nbsp;   ";
+                lblCurrentIndex.Text = "0";
+            }
+            else
+            {
+                UpdatePageElements(0);
+            }
+        }
+        else
+        {
+            //ResetForm();
+        }
+    }
+    private static int GetIndex(Label lbl)
+    {
+        int retVal = 0;
+        if (lbl.Text.Contains("&nbsp"))
+        {
+            retVal = Convert.ToInt16(lbl.Text.Substring(0, lbl.Text.IndexOf("&"))) - 1;
+        }
+        else
+        {
+            retVal = Convert.ToInt16(lbl.Text) -1;
+        }
+        //return retVal > -1 ? retVal : 0;
+        return retVal;
     }
     protected void btnPrevious_Click(object sender, EventArgs e)
     {
-        int currentIndex = Convert.ToInt16(lblCurrentIndex.Text)-1;
+        int currentIndex = GetIndex(lblCurrentIndex);// Convert.ToInt16(lblCurrentIndex.Text.Substring(0, lblCurrentIndex.Text.IndexOf("&")));
+        //int currentIndex = Convert.ToInt16(lblCurrentIndex.Text)-1;
         PerformLocalSave(currentIndex);
         currentIndex--;
         if (currentIndex < 0)
@@ -160,21 +209,27 @@ public partial class _Default : System.Web.UI.Page
     }
     protected void btnNext_Click(object sender, EventArgs e)
     {
-        int currentIndex = Convert.ToInt16(lblCurrentIndex.Text)-1;
-        int maxIndex = Convert.ToInt16(lblMaxIndex.Text.Substring(0, lblMaxIndex.Text.IndexOf("&")));
+        int currentIndex = GetIndex(lblCurrentIndex);// Convert.ToInt16(lblCurrentIndex.Text.Substring(0, lblCurrentIndex.Text.IndexOf("&")));
+        int maxIndex = GetIndex(lblMaxIndex);// Convert.ToInt16(lblMaxIndex.Text.Substring(0, lblMaxIndex.Text.IndexOf("&")));
         //int maxIndex = Convert.ToInt16(lblMaxIndex.Text);
         PerformLocalSave(currentIndex);
         currentIndex++;
-        if (currentIndex > maxIndex -1)
+        if (currentIndex > maxIndex )
         {
-            currentIndex = maxIndex-1;
+            currentIndex = maxIndex;
         }
-        
         UpdatePageElements(currentIndex);
     }
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        int currentIndex = Convert.ToInt16(lblCurrentIndex.Text) - 1;
+        int currentIndex = GetIndex(lblCurrentIndex);// Convert.ToInt16(lblCurrentIndex.Text) - 1
+        if (currentIndex < 0)
+        {
+            lblSaved.ForeColor = System.Drawing.Color.Red;
+            lblSaved.Text = "Please add a test before saving";
+            lblSaved.BackColor = System.Drawing.Color.White;
+            return;
+        }
         PerformLocalSave(currentIndex);
         _xmlDoc.Save(settingsNewXML);
         lblSaved.ForeColor = System.Drawing.Color.ForestGreen;

@@ -22,7 +22,7 @@ namespace WebServiceTester
             {
                 string settingsXML = System.Environment.CurrentDirectory + "\\Settings_new.xml";
                 var xDoc = XDocument.Load(settingsXML);
-                int interval = 1000 * 5 *  Convert.ToInt32(xDoc.Element("WebServiceTester").Element("FREQUENCY").Value);
+                int interval = 1000 * 60 *  Convert.ToInt32(xDoc.Element("WebServiceTester").Element("FREQUENCY").Value);
                 aTimer = new System.Timers.Timer(interval);
                 aTimer.Elapsed += OnTimedEvent;
                 aTimer.Enabled = true;
@@ -44,12 +44,28 @@ namespace WebServiceTester
                 Console.ReadLine();
             }
         }
+        private static DateTime _lastHeartBeatEmail = new DateTime(2000, 1, 1, 1, 1, 1, 1);
+        private static int _errorCount = 0;
+        private static int _emailErrors = 0;
+        private static int _emailBackOnlines = 0;
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             try
             {
                 aTimer.Enabled = false;
                 Console.WriteLine("Iteration: " + iterations + " : " + DateTime.Now.ToString());
+                DateTime dtNow = DateTime.Now;
+                if (dtNow.ToShortDateString() != _lastHeartBeatEmail.ToShortDateString())
+                {
+                    Console.WriteLine("    Sending Heartbeat email");
+                    SendEmail("River.taig@gmail.com", " - Heartbeat!!", "Web Service tester is working. Error Count = " + _errorCount + ". Error Email Notifications: " + _emailErrors + ". Back online Email notifications: " + _emailBackOnlines);
+                    _errorCount = 0;
+                    _emailErrors = 0;
+                    _emailBackOnlines = 0;
+                    _lastHeartBeatEmail = DateTime.Now;
+                }
+                
+                
                 string settingsXML = System.Environment.CurrentDirectory + "\\Settings_new.xml";
                 var xDoc = XDocument.Load(settingsXML);
                 string a = "WebServiceTester";
@@ -59,6 +75,9 @@ namespace WebServiceTester
                     string path = xel.Element("PATH").Value;
                     var emails = xel.Element("EMAIL");
                     var name = xel.Element("NAME").Value;
+
+
+
                     var threshold = Convert.ToInt16(xel.Element("THRESHOLD").Value);
                     int failCount = Convert.ToInt16(xel.Element("CONSECUTIVEFAILCOUNT").Value);//LASTFAILURE
                     //Console.WriteLine("Fail Count = " + failCount);
@@ -66,21 +85,25 @@ namespace WebServiceTester
                     WebClient wc = new WebClient();
                     try
                     {
-                        byte[] testReturn = wc.DownloadData(path);
-                        if (failCount > 0)
+                        if (name.ToUpper() != "HEARTBEAT")
                         {
-                            Console.WriteLine("    " + path +  " is Back online!");
-                            xel.Element("CONSECUTIVEFAILCOUNT").Value = "0";
-                            xDoc.Save(settingsXML);
-                            foreach (string email in emails.Value.Split(','))
+                            byte[] testReturn = wc.DownloadData(path);
+                            if (failCount > 0)
                             {
-                                Console.WriteLine("    Sending Back online email");
-                                SendEmail(email, name + " - SUCCESS!!", path + " should be available now");
+                                Console.WriteLine("    " + path + " is Back online!");
+                                xel.Element("CONSECUTIVEFAILCOUNT").Value = "0";
+                                xDoc.Save(settingsXML);
+                                foreach (string email in emails.Value.Split(','))
+                                {
+                                    _emailBackOnlines++;
+                                    Console.WriteLine("    Sending Back online email");
+                                    SendEmail(email, name + " - SUCCESS!!", path + " should be available now");
+                                }
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("    Success on " + path + " - no action taken");
+                            else
+                            {
+                                Console.WriteLine("    Success on " + path + " - no action taken");
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -88,6 +111,7 @@ namespace WebServiceTester
                         string dt = DateTime.Now.ToLongDateString();
                         xel.Element("LASTFAILURE").Value = dt;
                         failCount++;
+                        _errorCount++;
                         Console.WriteLine("    FAIL on " + path + "  FailCount = " +  failCount);
                         xel.Element("CONSECUTIVEFAILCOUNT").Value = failCount.ToString();
                         xel.Element("REASON").Value = ex.ToString();
@@ -96,6 +120,7 @@ namespace WebServiceTester
                         {
                             foreach (string email in emails.Value.Split(','))
                             {
+                                _emailErrors++;
                                 Console.WriteLine("    Sending failure email");
                                 SendEmail(email, name + " FAILED!!", 
                                     "URL: " + path 

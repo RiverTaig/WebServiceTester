@@ -3,31 +3,28 @@
   <FREQUENCY>1</FREQUENCY>
   <URLS>
     <URL>
-      <NAME>Local Simple HTML</NAME>
-      <PATH> http://localhost/river/simple.html</PATH>
+      <NAME>a</NAME>
+      <PATH></PATH>
       <THRESHOLD>2</THRESHOLD>
-      <EMAIL>RIVER.TAIG@GMAIL.COM</EMAIL>
-      <CONSECUTIVEFAILCOUNT>0</CONSECUTIVEFAILCOUNT>
-      <LASTFAILURE>Wednesday, May 06, 2015</LASTFAILURE>
-      <REASON>System.Net.WebException: The remote server returned an error: (404) Not Found.
-   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest&amp; request)
-   at System.Net.WebClient.DownloadData(Uri address)
-   at WebServiceTester.Program.OnTimedEvent(Object source, ElapsedEventArgs e) in c:\Code\Git\WebServiceTester\Program.cs:line 69</REASON>
-    </URL>
-    <URL>
-      <NAME>Huffington Post</NAME>
-      <PATH>http://www.huffingtonpost.com</PATH>
-      <THRESHOLD>2</THRESHOLD>
-      <EMAIL>RIVER.TAIG@GMAIL.COM</EMAIL>
+      <EMAIL></EMAIL>
       <CONSECUTIVEFAILCOUNT>0</CONSECUTIVEFAILCOUNT>
       <LASTFAILURE></LASTFAILURE>
       <REASON></REASON>
     </URL>
     <URL>
-      <NAME>Intentional Failure </NAME>
-      <PATH>www.asdflkjtewwetccc.com</PATH>
+      <NAME>b</NAME>
+      <PATH></PATH>
       <THRESHOLD>2</THRESHOLD>
-      <EMAIL>river.taig@gmail.com</EMAIL>
+      <EMAIL></EMAIL>
+      <CONSECUTIVEFAILCOUNT>0</CONSECUTIVEFAILCOUNT>
+      <LASTFAILURE></LASTFAILURE>
+      <REASON></REASON>
+    </URL>
+    <URL>
+      <NAME>c</NAME>
+      <PATH></PATH>
+      <THRESHOLD>2</THRESHOLD>
+      <EMAIL></EMAIL>
       <CONSECUTIVEFAILCOUNT>0</CONSECUTIVEFAILCOUNT>
       <LASTFAILURE></LASTFAILURE>
       <REASON></REASON>
